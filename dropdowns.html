@@ -1,0 +1,154 @@
+<html>
+<head>
+<title>Nested Dropdowns</title>
+
+<style>
+body {
+    background-color: lightgrey;
+    margin: 0px;
+}
+.expandable {
+    background-color: lightgrey;
+    border: 2px solid gray;
+    border-right: 0px;
+    margin: 5px 0px 2px 4px;
+    padding: 5px 0px 5px 5px;
+}
+.text {
+    background-color: white;
+    user-select: none;
+    padding: 2px 0px 2px 2px;
+}
+.children {
+    border-left: 2px solid black;
+}
+.def {
+    color: blue;
+}
+.term_title {
+    font-weight: bold;
+}
+</style>
+<script>
+var running_id = 0
+var expandables = {};
+
+function generate_block(id, type) {
+    if (expandables[type]==undefined) console.log("NO EXPANDABLE OF TYPE "+type);
+
+    let block = '';
+    block += '<div class="expandable" id="' + id;
+    block += '" data-type="' + type;
+    block += '">';
+    block += '<div class="text" onclick="expand(' + id;
+    block += ')">';
+    block += expandables[type]['text'];
+    block += '</div><div class="children"></div>'
+    block += '</div>\n';
+    return block;
+}
+function expand(id) {
+    let elt = document.getElementById(id);
+    let type = elt.dataset.type;
+    let children = expandables[type]['children'];
+
+    let finalthing = '';
+    for (let i=0;i<children.length;i++) {
+        finalthing += generate_block(running_id++, children[i]);
+    }
+
+    elt.getElementsByClassName('children')[0].innerHTML = finalthing;
+    elt.getElementsByClassName('text')[0].setAttribute('onclick', 'contract('+id+')');
+}
+function contract(id) {
+    let elt = document.getElementById(id)
+    elt.getElementsByClassName('children')[0].style.display = 'none';
+    elt.getElementsByClassName('text')[0].setAttribute('onclick', 'reexpand('+id+')');
+}
+function reexpand(id) {
+    let elt = document.getElementById(id)
+    elt.getElementsByClassName('children')[0].style.display = 'block';
+    elt.getElementsByClassName('text')[0].setAttribute('onclick', 'contract('+id+')');
+}
+
+
+function add_expandable(id,text,children) {
+    expandables[id] = {'text':text, 'children':children};
+}
+function add_dummy(term) {
+    add_expandable(term,term,[]);
+}
+function add_text(id,text) {
+    add_expandable(id,text,[]);
+}
+function add_definition(term,definition) {
+    add_definition_extra(term,definition,[])
+}
+function add_definition_extra(term,definition,extras) {
+    rx = new RegExp(/\[\[[^\]]+\]\]/,"g");
+    children = [];
+    children.push(...extras);
+    while(m = rx.exec(definition)) {
+        children.push(m[0].slice(2,-2));
+    }
+    newdef = '<span class="term_title">'+ term + '</span>:<br>' + 
+        definition.replaceAll(/\[\[/g,'<span class="def">').replaceAll(/\]\]/g,'</span>')
+    add_expandable(term,newdef,children);
+}
+function add_text_list(id,text,list) {
+    let newlist = []
+    for (let i=0;i<list.length;i++) {
+        add_text(id+i,list[i]);
+        newlist.push(id+i)
+    }
+    add_expandable(id,'<span class="term_title">'+text+'</span>',newlist);
+}
+
+// symbol storage: ×∀∈∃ ⟺⟹
+// bbbold ℚℙℕ𝕀𝔽ℂℝℤ
+
+function main() {
+    add_definition('rationals','the set ℚ of rational numbers is the [[field of fractions]] of the [[integers]]')
+    add_definition('field of fractions','the field of fractions of a [[ring]] is the set of [[equivalence class]]es of [[ordered pair]]s of elements, under the [[equivalence relation]] (x,y)~(a,b) iff bx=ay');
+    add_definition('ring','a ring is a set R with two [[binary operation]]s + and ×, and two elements 0 and 1 that satisfy the [[ring axioms]]');
+    add_definition('cartesian product','the cartesian product S×T of two sets is formally the set of [[ordered pair]]s where the first element lies in the first set and the second in the second set');
+    add_definition('equivalence class','an equivalence class is a subset where all the elements are equivalent under a given [[equivalence relation]]');
+    add_definition('integers','the set ℤ of integers is the set of [[equivalence class]]es of [[ordered pair]]s of [[natural numbers]] under the [[equivalence relation]] (x,y)~(a,b) iff b+x=a+y');
+    add_definition('equivalence relation','an equivalence relation is a [[relation]] that is [[reflexive]], [[symmetric]], and [[transitive]]');
+    add_definition_extra('binary operation','a binary operation on a set S is a [[function]] from S×S to S. we often place the function symbol between the operands, such as with the operation "+" on the real numbers',[['cartesian product']]);
+    add_definition('ordered pair','an ordered pair (a,b) is formally defined as the set {{a},{a,b}}');
+    add_dummy('natural numbers');
+    add_definition('function','a function is formally a set of [[ordered pair]]s such that there is no repetition in the first position');
+    add_definition('relation','a relation R on a set S is a subset of the set of [[ordered pair]]s of S. we write xRy for (x,y)∈R');
+    add_definition('reflexive','a [[relation]] R is reflexive if xRx  ∀x');
+    add_definition('symmetric','a [[relation]] R is symmetric if xRy ⟺ yRx  ∀x,y');
+    add_definition('transitive','a [[relation]] R is transitive if xRy, yRz ⟹ xRz  ∀x,y,z');
+
+    add_text_list('ring axioms','ring axioms',[
+        '∀a∈R, a+0=a',
+        '∀a∈R, ∃b∈R with a+b=0',
+        '∀a,b∈R, a+b=b+a',
+        '∀a,b,c∈R, a+(b+c)=(a+b)+c',
+        '∀a∈R, a×1=a',
+        '∀a,b∈R, a×b=b×a',
+        '∀a,b,c∈R, a×(b×c)=(a×b)×c',
+        '∀a,b,c∈R, a×(b+c)=a×b+a×c'
+    ])
+    add_text_list('group axioms','group axioms',[
+        '∀a∈R, a•e=a',
+        '∀a∈R, ∃b∈R with a•b=e',
+        '∀a,b,c∈R, a•(b•c)=(a•b)•c'
+    ])
+    
+    document.body.innerHTML += generate_block(running_id++, 'rationals')
+}
+window.addEventListener('load', main);
+
+</script>
+
+
+</head>
+
+<body>
+</body>
+</html>

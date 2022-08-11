@@ -3,9 +3,120 @@
 <head>
 <title>Jeremy Harris</title>
 </head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+body {
+    background-color: black;
+    font-family: monospace;
+    color: white;
+}
+#header {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+}
+#footer {
+    text-align: center;
+    margin: auto;
+}
+#socials {
+    list-style: none;
+}
+#socials li {
+    display: inline;
+    margin: 0 0.3em;
+}
+#tabs ul {
+    padding-right: 1em;
+}
+#tabs ul li {
+    display: inline;
+    padding: 0.2em 0em;
+}
+#tabs ul li:not(:first-child)::before {
+    content: " | ";
+}
+a {
+    color: white;
+    text-decoration: none;
+}
+#tabs {
+    top: 50%;
+    position: absolute;
+    transform: translateY(-60%);
+    right: 0px;
+}
+
+#icon-svg {
+    pointer-events: none;
+    width: 100px;
+    background-color: black;
+}
+
+
+
+</style>
+
+<script>
+const socials = {
+    'fa-github': "https://www.github.com/j1h7e7",
+    'fa-linkedin': "https://www.linkedin.com/in/jeremy-harris-274427200/",
+    'fa-twitter': "https://www.twitter.com/jsquaredover6",
+    'fa-youtube-play': "https://www.youtube.com/user/j1h7e7",
+    'fa-envelope': 'mailto:j1h7e7@gmail.com',
+    'fa-envelope-square': 'mailto:jh2219@cantab.ac.uk',
+};
+</script>
+
 <body>
 
-A star at dawn
+
+<div id="header">
+<a href="index.html"><span style="display:inline-block;">
+
+<object id='icon-svg' data="./assets/icon.svg" type="image/svg+xml">
+<img id='icon-png' src="icon.png" />
+</object>
+
+</span></a>
+
+<div id="tabs">
+<ul>
+    <li>Resume</li>
+    <li>Projects</li>
+    <li>About me</li>
+    <li>Contact</li>
+    <li>Contact</li>
+</ul>
+</div>
+
+</div>
+
+
+<div id="footer">
+<ul id="socials"></ul>
+</div>
+
+<script>
+const social_list = document.getElementById('socials');
+
+for (const tag in socials) {
+    const link = document.createElement('a');
+    link.href = socials[tag];
+
+    const li = document.createElement('li');
+    li.className = `fa ${tag} fa-2x`;
+
+    link.appendChild(li);
+    social_list.append(link);
+}
+
+const icon_svg = document.getElementById("icon-svg");
+icon_svg.addEventListener('load', function() {
+    icon_svg.style.background = 'white';
+});
+</script>
 
 </body>
 </html>
