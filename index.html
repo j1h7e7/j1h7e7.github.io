@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>Jeremy Harris</title>
+<link rel="icon" type="image/x-icon" href="./assets/icon.png">
+
 </head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -10,6 +13,7 @@ body {
     background-color: black;
     font-family: monospace;
     color: white;
+    padding: 0 10%;
 }
 #header {
     width: 100%;
@@ -21,6 +25,7 @@ body {
     margin: auto;
 }
 #socials {
+    padding: 0;
     list-style: none;
 }
 #socials li {
@@ -42,10 +47,18 @@ a {
     text-decoration: none;
 }
 #tabs {
+    font-size: 1.2em;
     top: 50%;
     position: absolute;
     transform: translateY(-60%);
     right: 0px;
+}
+
+#content {
+    width: 50%;
+    margin: auto;
+    margin-bottom: 2em;
+    padding: 1em;
 }
 
 #icon-svg {
@@ -54,18 +67,28 @@ a {
     background-color: black;
 }
 
+h1 {
+    text-align: center;
+    font-size: 2.5em;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
 
 
 </style>
 
 <script>
 const socials = {
-    'fa-github': "https://www.github.com/j1h7e7",
-    'fa-linkedin': "https://www.linkedin.com/in/jeremy-harris-274427200/",
-    'fa-twitter': "https://www.twitter.com/jsquaredover6",
-    'fa-youtube-play': "https://www.youtube.com/user/j1h7e7",
-    'fa-envelope': 'mailto:j1h7e7@gmail.com',
-    'fa-envelope-square': 'mailto:jh2219@cantab.ac.uk',
+    'GitHub': ['fa-github', "https://www.github.com/j1h7e7"],
+    'LinkedIn': ['fa-linkedin', "https://www.linkedin.com/in/jeremy-harris-274427200/"],
+    'Twitter': ['fa-twitter', "https://www.twitter.com/jsquaredover6"],
+    'YouTube': ['fa-youtube-play', "https://www.youtube.com/user/j1h7e7"],
+    'Email 1': ['fa-envelope', 'mailto:j1h7e7@gmail.com'],
+    'Email 2': ['fa-envelope', 'mailto:jh2219@cantab.ac.uk'],
+
+    // TODO: add leetcode?
 };
 </script>
 
@@ -73,40 +96,60 @@ const socials = {
 
 
 <div id="header">
+
+<h1>Jeremy Harris</h1>
+
 <a href="index.html"><span style="display:inline-block;">
 
 <object id='icon-svg' data="./assets/icon.svg" type="image/svg+xml">
-<img id='icon-png' src="icon.png" />
+<img id='icon-png' src="./assets/icon.png" />
 </object>
 
 </span></a>
 
 <div id="tabs">
 <ul>
-    <li>Resume</li>
-    <li>Projects</li>
-    <li>About me</li>
-    <li>Contact</li>
-    <li>Contact</li>
+    <li title="Coming Soon!">Resume</li>
+    <li title="Coming Soon!">Projects</li>
+    <li title="Coming Soon!">Contact</li>
 </ul>
 </div>
 
 </div>
 
+<div id="content">
+<p>
+Welcome to my page! I'm a Cambridge graduate who studied mathematics, but in my free time I always had
+a big interest in programming and messing around with data.
+</p>
+<p>
+Feel free to check out any of my miscellaneous projects, although there are more on my GitHub that do not function
+as webpages.
+</p>
+</div>
 
 <div id="footer">
 <ul id="socials"></ul>
 </div>
 
 <script>
+console.log('!----------------------------------------------------------!\n' +
+            "Trust me, there's nothing interesting happening in here\n\n" +
+            "But hello! Nice chatting to you!\n\n" +
+            "You should check out the projects that actually use JS\n" +
+            '!---------------------------------------------------------!');
+</script>
+
+<script>
 const social_list = document.getElementById('socials');
 
-for (const tag in socials) {
+for (const name in socials) {
     const link = document.createElement('a');
-    link.href = socials[tag];
+    link.href = socials[name][1];
+    link.title = name;
 
     const li = document.createElement('li');
-    li.className = `fa ${tag} fa-2x`;
+    li.className = `fa ${socials[name][0]} fa-2x`;
 
     link.appendChild(li);
     social_list.append(link);
