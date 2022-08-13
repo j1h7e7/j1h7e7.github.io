@@ -35,6 +35,9 @@ a {
     color: white;
     text-decoration: none;
 }
+#header a{
+    text-decoration: underline;
+}
 #tabs {
     font-size: 1.2em;
     top: 50%;
@@ -61,7 +64,7 @@ a {
 h1 {
     text-align: center;
     font-size: 2.5em;
-    position: fixed;
+    position: absolute;
     width: 100%;
     top: 0;
     left: 0;
