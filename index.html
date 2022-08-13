@@ -7,77 +7,8 @@
 
 </head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="main.css">
 
-<style>
-body {
-    background-color: black;
-    font-family: monospace;
-    color: white;
-    padding: 0 10%;
-}
-#header {
-    width: 100%;
-    display: inline-block;
-    position: relative;
-}
-#footer {
-    text-align: center;
-    margin: auto;
-}
-#socials {
-    padding: 0;
-    list-style: none;
-}
-#socials li {
-    display: inline;
-    margin: 0 0.3em;
-}
-#tabs ul {
-    padding-right: 1em;
-}
-#tabs ul li {
-    display: inline;
-    padding: 0.2em 0em;
-}
-#tabs ul li:not(:first-child)::before {
-    content: " | ";
-}
-a {
-    color: white;
-    text-decoration: none;
-}
-#tabs {
-    font-size: 1.2em;
-    top: 50%;
-    position: absolute;
-    transform: translateY(-60%);
-    right: 0px;
-}
-
-#content {
-    width: 50%;
-    margin: auto;
-    margin-bottom: 2em;
-    padding: 1em;
-}
-
-#icon-svg {
-    pointer-events: none;
-    width: 100px;
-    background-color: black;
-}
-
-h1 {
-    text-align: center;
-    font-size: 2.5em;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
-}
-
-
-</style>
 
 <script>
 const socials = {
@@ -99,12 +30,10 @@ const socials = {
 
 <h1>Jeremy Harris</h1>
 
-<a href="index.html"><span style="display:inline-block;">
-
+<a href="/"><span style="display:inline-block;">
 <object id='icon-svg' data="./assets/icon.svg" type="image/svg+xml">
 <img id='icon-png' src="./assets/icon.png" />
 </object>
-
 </span></a>
 
 <div id="tabs">
@@ -154,11 +83,6 @@ for (const name in socials) {
     link.appendChild(li);
     social_list.append(link);
 }
-
-const icon_svg = document.getElementById("icon-svg");
-icon_svg.addEventListener('load', function() {
-    icon_svg.style.background = 'white';
-});
 </script>
 
 </body>
