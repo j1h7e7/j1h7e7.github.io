@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>❤️</title>
+<link rel="icon" type="image/x-icon" href="./assets/icon.png">
+<style>
+html, body { margin:0; padding:0; overflow:hidden; }
+svg { position:fixed; top:0; bottom:0; left:0; right:0; width: 100%; height: 100%; }
+</style>
+
+</head>
+
+<body>
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+
+</svg>
+
+
+
+<script>
+const heartpath = 'M 0 15 l -0.6 -0.5 c -12.9 -10.5 -16.4 -14.2 -16.4 -20.2 c 0 -5 4 -9 9 -9 c 4.1 0 6.4 2.3 8 4.1 c 1.6 -1.8 3.9 -4.1 8 -4.1 c 5 0 9 4 9 9 c 0 6 -3.5 9.7 -16.4 20.2 l -0.6 0.5 z';
+const svg = document.getElementsByTagName('svg')[0];
+
+const center = [200,170];
+const bottom_offset = [0,100];
+const o1 = [60,-100];
+const fo1 = [0,30];
+const o2 = [130,0];
+const fo2 = [0,60];
+
+const num_loops = 20;
+const n = 15; // granularity
+
+function make_heart() {
+    var heart = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    heart.setAttribute("d",heartpath);
+    heart.style.fill = '#f00f';
+    heart.style.stroke = '#0006';
+    heart.style.strokeWidth = "1px";
+    heart.setAttribute("transform","translate(-100 -100), scale(0.7)");
+
+    return heart
+}
+
+function make_path(t,s,offset) {
+    let path = `M ${center[0]} ${center[1]} c`;
+
+    let u = t**0.5;
+    let v = 1-u;
+
+    //pt1
+    path += `${(o1[0]*u + fo1[0]*v)*s} ${o1[1]*u + fo1[1]*v} `;
+    //pt2
+    path += `${(o2[0]*u + fo2[0]*v)*s} ${o2[1]*u + fo2[1]*v} `;
+    //final
+    path += `${bottom_offset[0]} ${bottom_offset[1]}`;
+
+    var heart = make_heart()
+    var animate = document.createElementNS("http://www.w3.org/2000/svg", 'animateMotion');
+    animate.setAttribute("path",path)
+    animate.setAttribute("dur",`${10}s`);
+    animate.setAttribute('repeatCount',"indefinite");
+    animate.setAttribute('begin',`${offset+Math.random()}s`);
+    heart.appendChild(animate);
+    return heart
+}
+
+hearts = []
+
+for (let loops=0; loops<num_loops; loops++) {
+    for (let side of [1,-1]) {
+        for (let i=n; i>=0; i--) {
+            hearts.push(make_path(i/n,side,loops));
+        }
+    }
+}
+
+let i = hearts.length;
+let r;
+
+while (i > 0) {
+    r = Math.floor(Math.random() * i);
+    i--;
+    [hearts[i], hearts[r]] = [hearts[r], hearts[i]];
+}
+
+for (const elt of hearts) {
+    svg.appendChild(elt);
+}
+
+
+</script>
+</body>
+</html>
