@@ -1,161 +1,253 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<title>❤️</title>
-<link rel="icon" type="image/x-icon" href="./assets/icon.png">
-<style>
-html, body { margin:0; padding:0; overflow:hidden; }
-svg { position:fixed; top:0; bottom:0; left:0; right:0; width: 100%; height: 100%; }
-text { font:10px Chalkboard; text-anchor: middle; fill: gray}
-</style>
+    <title>❤️</title>
+    <link rel="icon" type="image/x-icon" href="./assets/icon.png">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        svg {
+            position: fixed;
+            top: 0;
+            bottom: 5%;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        text {
+            font: 10px Chalkboard;
+            text-anchor: middle;
+            fill: gray
+        }
+
+        .stats {
+            padding: 0 5%;
+            position: fixed;
+            left: 0;
+            right: 0;
+            height: 5%;
+            font: 4vmin Chalkboard;
+            color: gray;
+            text-align: center;
+            line-height: 100%;
+        }
+
+        #timer {
+            bottom: 7%;
+        }
+
+        #since {
+            bottom: 1%;
+        }
+    </style>
 
 </head>
 
 <body>
-<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-</svg>
+    <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg" viewBox="0 10 200 210">
+    </svg>
+    <div class="stats" id="timer">
+        Together for:
+        <span id="clock"></span>
+    </div>
+    <div class="stats" id="since">
+        Together since:
+        <span id="start"></span>
+    </div>
 
 
+    <script>
+        const heartpath = 'M 0 15 c -14 -11 -18 -15 -18 -20 c 0 -6 4 -10 9 -10 c 5 0 7 2 9 4.4 c 2 -2.4 4 -4.4 9 -4.4 c 5 0 9 4 9 10 c 0 5 -4 9 -18 20 Z';
+        const sparklepath = 'M -5 -5 c 5 5 5 5 10 0 c -5 5 -5 5 0 10 c -5 -5 -5 -5 -10 0 c 5 -5 5 -5 0 -10'
+        const svg = document.getElementsByTagName('svg')[0];
+        const heartpoly = [[100, 40], [150, 20], [200, 40], [200, 100], [100, 190], [0, 100], [0, 40], [50, 20]];
 
-<script>
-const heartpath = 'M 0 15 c -14 -11 -18 -15 -18 -20 c 0 -6 4 -10 9 -10 c 5 0 7 2 9 4.4 c 2 -2.4 4 -4.4 9 -4.4 c 5 0 9 4 9 10 c 0 5 -4 9 -18 20 Z';
-const sparklepath = 'M -5 -5 c 5 5 5 5 10 0 c -5 5 -5 5 0 10 c -5 -5 -5 -5 -10 0 c 5 -5 5 -5 0 -10'
-const svg = document.getElementsByTagName('svg')[0];
-const heartpoly = [[100,40],[150,20],[200,40],[200,100],[100,190],[0,100],[0,40],[50,20]];
+        const center = [200, 170];
+        const bottom_offset = [0, 100];
+        const o1 = [60, -80];
+        const fo1 = [0, 30];
+        const o2 = [150, 0];
+        const fo2 = [0, 50];
 
-const center = [200,170];
-const bottom_offset = [0,100];
-const o1 = [60,-80];
-const fo1 = [0,30];
-const o2 = [150,0];
-const fo2 = [0,50];
+        const heart_loops = 20;
+        const n = 15; // granularity
+        const num_sparkles = 50;
 
-const heart_loops = 20;
-const n = 15; // granularity
-const num_sparkles = 50;
+        function make_heart() {
+            var heart = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+            heart.setAttribute("d", heartpath);
+            heart.style.fill = '#f4c2c2ff';
+            heart.style.stroke = '#fff3';
+            heart.style.strokeWidth = "1px";
+            heart.setAttribute("transform", "translate(-100 -100), scale(0.7)");
 
-function make_heart() {
-    var heart = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-    heart.setAttribute("d",heartpath);
-    heart.style.fill = '#f4c2c2ff';
-    heart.style.stroke = '#fff3';
-    heart.style.strokeWidth = "1px";
-    heart.setAttribute("transform","translate(-100 -100), scale(0.7)");
-
-    return heart
-}
-
-function make_sparkle() {
-    var sparkle = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-    sparkle.setAttribute("d",sparklepath);
-    sparkle.style.fill = '#ffd700';
-    sparkle.style.opacity = 0;
-
-    return sparkle;
-}
-
-function make_path(t,s,offset) {
-    let path = `M ${center[0]} ${center[1]} c`;
-    let u = t**0.5;
-    let v = 1-u;
-
-    //pt1
-    path += `${(o1[0]*u + fo1[0]*v)*s} ${o1[1]*u + fo1[1]*v} `;
-    //pt2
-    path += `${(o2[0]*u + fo2[0]*v)*s} ${o2[1]*u + fo2[1]*v} `;
-    //final
-    path += `${bottom_offset[0]} ${bottom_offset[1]}`;
-
-    var heart = make_heart()
-    var animate = document.createElementNS("http://www.w3.org/2000/svg", 'animateMotion');
-    animate.setAttribute("path",path)
-    animate.setAttribute("dur",`${10}s`);
-    animate.setAttribute('repeatCount',"indefinite");
-    animate.setAttribute('begin',`${offset+Math.random()-20}s`);
-    heart.appendChild(animate);
-    return heart
-}
-
-function get_sparkle_coords() {
-    const w = window.innerWidth, h = window.innerHeight;
-    let xs, xo, ys, yo;
-    if (w>h) {
-        ys = 200; yo = 0;
-        xs = (w/h)*200; xo = (xs-200)/2;
-    } else {
-        xs = 200; xo = 0;
-        ys = (h/w)*200; yo = (ys-200)/2;
-    }
-
-    let x,y;
-    while (true) {
-        x = Math.random()*xs-xo;
-        y = Math.random()*ys-yo;
-        let inside = false
-        for (let i = 0, j = heartpoly.length - 1; i < heartpoly.length; j = i++) {
-            const xi = heartpoly[i][0], yi = heartpoly[i][1]
-            const xj = heartpoly[j][0], yj = heartpoly[j][1]
-
-            const intersect = yi > y != yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi
-            if (intersect) inside = !inside
+            return heart
         }
 
-        if (!inside) break;
-    }
-    return [x,y];
-}
+        function make_sparkle() {
+            var sparkle = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+            sparkle.setAttribute("d", sparklepath);
+            sparkle.style.fill = '#ffd700';
+            sparkle.style.opacity = 0;
 
-function do_sparkle(sparkle_elt) {
-    let c = get_sparkle_coords();
-    const scale = Math.random()+0.5
-    sparkle_elt.setAttribute("transform",`translate(${c[0]} ${c[1]}) scale(${scale})`);
-    const effect = new KeyframeEffect(
-        sparkle_elt, [{opacity: 0}, {opacity: 1}, {opacity: 0}], {duration: 1000}
-    );
-    new Animation(effect, document.timeline).play();
-
-    setTimeout(()=>do_sparkle(sparkle_elt), (Math.random()+0.5)*2000);
-}
-
-hearts = []
-for (let loops=0; loops<heart_loops; loops++) {
-    for (let side of [1,-1]) {
-        for (let i=n; i>=0; i--) {
-            hearts.push(make_path(i/n,side,loops));
+            return sparkle;
         }
-    }
-}
 
-let i = hearts.length;
-let r;
-while (i > 0) {
-    r = Math.floor(Math.random() * i);
-    i--;
-    [hearts[i], hearts[r]] = [hearts[r], hearts[i]];
-}
-for (const elt of hearts) {
-    svg.appendChild(elt);
-}
+        function make_path(t, s, offset) {
+            let path = `M ${center[0]} ${center[1]} c`;
+            let u = t ** 0.5;
+            let v = 1 - u;
 
-sparkles = []
-for (let i=0; i<num_sparkles; i++) {
-    const s = make_sparkle();
-    svg.appendChild(s);
-    setTimeout(()=>do_sparkle(s), (Math.random()+0.5)*2000);
-}
+            //pt1
+            path += `${(o1[0] * u + fo1[0] * v) * s} ${o1[1] * u + fo1[1] * v} `;
+            //pt2
+            path += `${(o2[0] * u + fo2[0] * v) * s} ${o2[1] * u + fo2[1] * v} `;
+            //final
+            path += `${bottom_offset[0]} ${bottom_offset[1]}`;
 
-const text1 = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-text1.innerHTML = 'TO DASSIE';
-text1.setAttribute('x',"50%");
-text1.setAttribute('y',"10%");
-const text2 = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-text2.innerHTML = 'LOVE JEREMY';
-text2.setAttribute('x',"50%");
-text2.setAttribute('y',"97%");
-svg.appendChild(text1);
-svg.appendChild(text2);
+            var heart = make_heart()
+            var animate = document.createElementNS("http://www.w3.org/2000/svg", 'animateMotion');
+            animate.setAttribute("path", path)
+            animate.setAttribute("dur", `${10}s`);
+            animate.setAttribute('repeatCount', "indefinite");
+            animate.setAttribute('begin', `${offset + Math.random() - 20}s`);
+            heart.appendChild(animate);
+            return heart
+        }
 
-</script>
+        function get_sparkle_coords() {
+            const w = window.innerWidth, h = window.innerHeight;
+            let xs, xo, ys, yo;
+            if (w > h) {
+                ys = 200; yo = 0;
+                xs = (w / h) * 200; xo = (xs - 200) / 2;
+            } else {
+                xs = 200; xo = 0;
+                ys = (h / w) * 200; yo = (ys - 200) / 2;
+            }
+
+            let x, y;
+            while (true) {
+                x = Math.random() * xs - xo;
+                y = Math.random() * ys - yo;
+                let inside = false
+                for (let i = 0, j = heartpoly.length - 1; i < heartpoly.length; j = i++) {
+                    const xi = heartpoly[i][0], yi = heartpoly[i][1]
+                    const xj = heartpoly[j][0], yj = heartpoly[j][1]
+
+                    const intersect = yi > y != yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi
+                    if (intersect) inside = !inside
+                }
+
+                if (!inside) break;
+            }
+            return [x, y];
+        }
+
+        function do_sparkle(sparkle_elt) {
+            let c = get_sparkle_coords();
+            const scale = Math.random() + 0.5
+            sparkle_elt.setAttribute("transform", `translate(${c[0]} ${c[1]}) scale(${scale})`);
+            const effect = new KeyframeEffect(
+                sparkle_elt, [{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 1000 }
+            );
+            new Animation(effect, document.timeline).play();
+
+            setTimeout(() => do_sparkle(sparkle_elt), (Math.random() + 0.5) * 2000);
+        }
+
+        hearts = []
+        for (let loops = 0; loops < heart_loops; loops++) {
+            for (let side of [1, -1]) {
+                for (let i = n; i >= 0; i--) {
+                    hearts.push(make_path(i / n, side, loops));
+                }
+            }
+        }
+
+        let i = hearts.length;
+        let r;
+        while (i > 0) {
+            r = Math.floor(Math.random() * i);
+            i--;
+            [hearts[i], hearts[r]] = [hearts[r], hearts[i]];
+        }
+        for (const elt of hearts) {
+            svg.appendChild(elt);
+        }
+
+        sparkles = []
+        for (let i = 0; i < num_sparkles; i++) {
+            const s = make_sparkle();
+            svg.appendChild(s);
+            setTimeout(() => do_sparkle(s), (Math.random() + 0.5) * 2000);
+        }
+
+        const text1 = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+        text1.innerHTML = 'TO DASSIE';
+        text1.setAttribute('x', "50%");
+        text1.setAttribute('y', "10%");
+        const text2 = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+        text2.innerHTML = 'LOVE JEREMY';
+        text2.setAttribute('x', "50%");
+        text2.setAttribute('y', "91%");
+        svg.appendChild(text1);
+        svg.appendChild(text2);
+
+    </script>
+    <script>
+        const startTime = new Date('14 Sep 2022 18:00:00 GMT-0700');
+        const clock = document.getElementById('clock');
+        const start = document.getElementById('start');
+
+        function updateTime() {
+            const now = new Date();
+
+            let month_diff = now.getMonth() - startTime.getMonth() + (now.getFullYear() - startTime.getFullYear()) * 12;
+            if (now.getDate() < startTime.getDate()) {
+                month_diff--;
+            }
+            let date_with_offset = new Date(startTime.getTime());
+            date_with_offset.setMonth(date_with_offset.getMonth() + month_diff % 12);
+            date_with_offset.setFullYear(date_with_offset.getFullYear() + Math.floor(month_diff / 12));
+            const day_diff = (now.valueOf() - date_with_offset.valueOf()) / 1000 / 60 / 60 / 24 | 0;
+            const second_diff = (now.valueOf() - startTime.valueOf()) / 1000 % (3600 * 24) | 0;
+
+
+            const years = Math.floor(month_diff / 12);
+            const months = month_diff % 12;
+            const days = day_diff;
+            const hours = second_diff / 3600 | 0;
+            const minutes = second_diff / 60 % 60 | 0;
+            const seconds = second_diff % 60;
+
+            let duration = '';
+            if (years > 0) duration += `${years} year${years > 1 ? 's' : ''} `;
+            if (months > 0) duration += `${months} month${months > 1 ? 's' : ''} `;
+            if (days > 0) duration += `${days} day${days > 1 ? 's' : ''} `;
+            if (hours > 0) duration += `${hours} hour${hours > 1 ? 's' : ''} `;
+            if (minutes > 0) duration += `${minutes} minute${minutes > 1 ? 's' : ''} `;
+            if (seconds > 0) duration += `${seconds} second${seconds > 1 ? 's' : ''} `;
+
+            clock.innerHTML = duration;
+        }
+
+        document.addEventListener('DOMContentLoaded', updateTime);
+        document.addEventListener('DOMContentLoaded', () => start.innerHTML = startTime.toLocaleDateString(
+            'en-us', { year: 'numeric', month: 'long', day: 'numeric' }
+        ));
+        document.addEventListener('DOMContentLoaded', () => setInterval(updateTime, 100));
+
+    </script>
 </body>
+
 </html>
