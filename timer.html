@@ -89,7 +89,7 @@
           goodnightTime.getMonth(),
           goodnightTime.getDate()
         );
-        const now_with_night = now - 4 * (60 * 60 * 1000); // -4 hrs to not immediately wrap at midnight
+        const now_with_night = now.setHours(now.getHours() - 4); // -4 hrs to not immediately wrap at midnight
         const utc_f = Date.UTC(
           now.getFullYear(),
           now.getMonth(),
