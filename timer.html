@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Timer</title>
+    <link rel="icon" type="image/x-icon" href="./assets/icon.png" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      .stats {
+        padding: 0 5%;
+        left: 0;
+        right: 0;
+        height: 5%;
+        font: 4vmin Chalkboard;
+        color: red;
+        text-align: center;
+        line-height: 100%;
+        margin-top: 2vw;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="stats" id="timer">
+      Total time:
+      <span id="clock"></span>
+    </div>
+    <div class="stats" id="daynum">
+      It is day
+      <span id="day"></span>
+      of good night messages
+    </div>
+    <script>
+      const goodnightTime = new Date("1 Nov 2025");
+      const startTime = new Date("5 Nov 2025 21:00:00 GMT-0700");
+      const clock = document.getElementById("clock");
+      const day = document.getElementById("day");
+
+      function updateTime() {
+        const now = new Date();
+
+        // update time
+        let month_diff =
+          now.getMonth() -
+          startTime.getMonth() +
+          (now.getFullYear() - startTime.getFullYear()) * 12;
+        if (now.getDate() < startTime.getDate()) {
+          month_diff--;
+        }
+        let date_with_offset = new Date(startTime.getTime());
+        date_with_offset.setMonth(
+          date_with_offset.getMonth() + (month_diff % 12)
+        );
+        date_with_offset.setFullYear(
+          date_with_offset.getFullYear() + Math.floor(month_diff / 12)
+        );
+        const day_diff =
+          ((now.valueOf() - date_with_offset.valueOf()) / 1000 / 60 / 60 / 24) |
+          0;
+        const second_diff =
+          ((now.valueOf() - startTime.valueOf()) / 1000) % (3600 * 24) | 0;
+
+        const years = Math.floor(month_diff / 12);
+        const months = month_diff % 12;
+        const days = day_diff;
+        const hours = (second_diff / 3600) | 0;
+        const minutes = (second_diff / 60) % 60 | 0;
+        const seconds = second_diff % 60;
+
+        let duration = "";
+        if (years > 0) duration += `${years} year${years > 1 ? "s" : ""} `;
+        if (months > 0) duration += `${months} month${months > 1 ? "s" : ""} `;
+        if (days > 0) duration += `${days} day${days > 1 ? "s" : ""} `;
+        if (hours > 0) duration += `${hours} hour${hours > 1 ? "s" : ""} `;
+        if (minutes > 0)
+          duration += `${minutes} minute${minutes > 1 ? "s" : ""} `;
+        if (seconds > 0)
+          duration += `${seconds} second${seconds > 1 ? "s" : ""} `;
+
+        clock.innerHTML = duration;
+
+        // update date
+        const utc_i = Date.UTC(
+          goodnightTime.getFullYear(),
+          goodnightTime.getMonth(),
+          goodnightTime.getDate()
+        );
+        const now_with_night = now - 4 * (60 * 60); // -4 hrs to not immediately wrap at midnight
+        const utc_f = Date.UTC(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate()
+        );
+        const date_dif = Math.floor((utc_f - utc_i) / (24 * 60 * 60 * 1000));
+
+        day.innerHTML = `${date_dif}`;
+      }
+
+      document.addEventListener("DOMContentLoaded", updateTime);
+      document.addEventListener("DOMContentLoaded", () =>
+        setInterval(updateTime, 100)
+      );
+    </script>
+  </body>
+</html>
