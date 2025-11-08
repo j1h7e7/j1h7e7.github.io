@@ -36,7 +36,7 @@
     </div>
     <script>
       const goodnightTime = new Date("1 Nov 2025");
-      const startTime = new Date("5 Nov 2025 21:00:00 GMT-0700");
+      const startTime = new Date("4 Nov 2025 21:00:00 GMT-0800");
       const clock = document.getElementById("clock");
       const day = document.getElementById("day");
 
@@ -89,7 +89,7 @@
           goodnightTime.getMonth(),
           goodnightTime.getDate()
         );
-        const now_with_night = now - 4 * (60 * 60); // -4 hrs to not immediately wrap at midnight
+        const now_with_night = now - 4 * (60 * 60 * 1000); // -4 hrs to not immediately wrap at midnight
         const utc_f = Date.UTC(
           now.getFullYear(),
           now.getMonth(),
