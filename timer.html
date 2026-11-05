@@ -40,17 +40,29 @@
       const clock = document.getElementById("clock");
       const day = document.getElementById("day");
 
+      function getTimeOfDay(date) {
+        const midnight = new Date(date);
+        midnight.setHours(0, 0, 0, 0);
+        return (date-midnight);
+      }
+
+      function getMonthDiff(start, end) {
+        const end2 = new Date(end);
+        if (getTimeOfDay(end)<getTimeOfDay(start)) {
+          end2.setDate(end2.getDate()-1);
+        }
+
+        const monthDiff = end2.getMonth()-start.getMonth();
+        const yearDiff = end2.getFullYear()-start.getFullYear();
+        const adjust = +(end2.getDate() < startTime.getDate());
+        return monthDiff + yearDiff*12 - adjust;
+      }
+
       function updateTime() {
         const now = new Date();
 
         // update time
-        let month_diff =
-          now.getMonth() -
-          startTime.getMonth() +
-          (now.getFullYear() - startTime.getFullYear()) * 12;
-        if (now.getDate() < startTime.getDate()) {
-          month_diff--;
-        }
+        const month_diff = getMonthDiff(startTime,now);
         let date_with_offset = new Date(startTime.getTime());
         date_with_offset.setMonth(
           date_with_offset.getMonth() + (month_diff % 12)
